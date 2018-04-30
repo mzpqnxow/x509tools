@@ -16,7 +16,7 @@ class X509Helper(Logging):
         self.modulus_blacklist_config_path = blacklist_file
 
         if logger is None:
-            Logging.__init__(self, log_level)
+            Logging.__init__(self, log_level=log_level)
         else:
             self.logger = logger
         self.load_modulus_blacklist()

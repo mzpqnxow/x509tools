@@ -30,7 +30,7 @@ class X509HelperApplication(Logging):
         self.spinner_status = 0
 
         if logger is None:
-            Logging.__init__(self.log_level)
+            Logging.__init__(self, self.log_level)
         else:
             self.logger = logger
 
@@ -121,7 +121,7 @@ class X509HelperApplication(Logging):
             return
         self.spinner_speed_status = 0
         self.spinner_status += 1
-        self.spinner_status = self.spinner_status.format(len(self.SPINNER_SYMBOLS))
+        self.spinner_status = self.spinner_status % (len(self.SPINNER_SYMBOLS))
         sys.stdout.write(
             '\r[.formatc] .format.4d/.format.4d files processed ... P A R S I N G ...'.format(
                 self.SPINNER_SYMBOLS[self.spinner_status],
@@ -139,10 +139,10 @@ class X509HelperApplication(Logging):
             self.total_input_files_processed += 1
             self.logger.debug('processing {}'.format(file))
             file = self.input_directory + file
-            if self.try_cert(self.blacklist_files.logger):
+            if self.try_cert(file, self.blacklist_file, self.logger):
                 continue
             else:
-                self.try_key(self.blacklist_files.logger)
+                self.try_key(file, self.blacklist_file, self.logger)
         print('')
         print('DONE scanning "{}" for PEM format keys/certificates!'.format(self.input_directory))
         print('Found {} keys, {} certificates!'.format(len(self.found_keys), len(self.found_certificates)))

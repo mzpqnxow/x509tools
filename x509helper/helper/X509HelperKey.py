@@ -11,7 +11,7 @@ import OpenSSL
 
 class X509HelperKey(X509Helper.X509Helper):
     def __init__(self, key_file, blacklist_file=None, logger=None, password='password'):
-        X509Helper.__init__(self, logger=logger, blacklist_file=blacklist_file)
+        X509Helper.X509Helper.__init__(self, logger=logger, blacklist_file=blacklist_file)
         self.key_pem_buffer = None
         self.rsa_key = None
         self.key_private_asn1 = None

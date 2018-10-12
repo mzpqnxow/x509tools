@@ -1,3 +1,11 @@
 ## Notes
 
-This is the app you run against a live program on a Windows host. It was developed during the times of Windows 7, no guarantees it will work on modern Windows, or even on Windows 7 at this point. It's 5 years old. YMMV. Code is sloppy, but has been minimally linted and PEP8'd
+This code is used initially to dump certificates/keypairs out of running Microsoft Windows Processes. In and of itself it isn't very useful, you will want to use x509helper on the output to match, dedup and validate all findings.
+
+## More notes
+
+This is very poorly written and violates all sorts of PEP8 and linting rules but I don't have time to clean it up. I tested it, it works.
+
+## Using
+
+This can run on Linux and requires the output of x509dump in a directory which is specified on the command-line. The out directory (results directory) should also be specified.

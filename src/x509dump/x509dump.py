@@ -1,8 +1,19 @@
 #!/usr/bin/env python2
+# -*- coding: utf-8 -*-
 """
-win32 module Copyright (c) 2009-2014, Mario Vila
-x509dump.py Copyright (c) 2013, copyright@mzpqnxow.com
+Build a Python virtual environment without setuptools, virtualenv and
+other dependencies. Useful when building on "fresh" systems or those
+which for some reason do not have the required dependencies available
+
+Support Python 2.6, Python 2.7, and Python 3
+See Makefile ...
+
+Copyright (C) 2018
+    Adam Greene <copyright@mzpqnxow.com>
+    David Marker <dave@freedave.net>
+Please see LICENSE or LICENSE.md for terms
 """
+from __future__ import print_function
 import argparse
 import errno
 import logging

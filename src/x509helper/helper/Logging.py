@@ -3,11 +3,7 @@ import sys
 
 
 class LoggingMixin(object):
-    """
-    barebones base class for logging functionality. This is really poor design
-    and implementation. It's very old :<
-    """
-
+    """Really simple and not very well written Mixin for logging"""
     def __init__(self, log_level):
         self.log_level = log_level
         self.init_logging()

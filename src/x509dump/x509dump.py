@@ -1,17 +1,18 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 """
-Build a Python virtual environment without setuptools, virtualenv and
-other dependencies. Useful when building on "fresh" systems or those
-which for some reason do not have the required dependencies available
-
-Support Python 2.6, Python 2.7, and Python 3
-See Makefile ...
-
 Copyright (C) 2018
     Adam Greene <copyright@mzpqnxow.com>
-    David Marker <dave@freedave.net>
 Please see LICENSE or LICENSE.md for terms
+
+Main interface for scraping memory and identify certificates and keys in the following
+formats:
+
+1. DERP
+2. PEM
+
+PEM is easy. DER is pretty easy. BIGNUM was added, but the branch was lost. So no bignum/OpenSSL
+native structure support. Add it yourself.
 """
 from __future__ import print_function
 import argparse

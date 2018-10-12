@@ -6,13 +6,17 @@
 
 A (very) old and unmaintained Python project used to dump x509/DER keys and certificates from live Windows processes. This was written around 2011. Maybe it will be useful to someone, it is unmaintained and has not been tested wince Windows 7
 
+## Releases
+
+This repository contains a source release and a binary release. This is due to the ppain that is caused by needing to build and/or install the binary dependencies for the Python Cryptography libraries. You are free to figure them out and use the pure Python code, but I highly suggest you use the executables, which were constructed using [py2exe](http://www.py2exe.org) which works well enough
+
 ## x509dump.py
 
-This tool will dump all certificates and keys from a live/running Win32 process. It isn't terribly smart and relies on known DER and PEM patterns, but it finds a LOT of stuff
+This tool will dump all certificates and keys from a live/running Win32 process. It isn't terribly smart and relies on known DER and PEM patterns, but it finds a LOT of stuff. Run this first, it dumps output to a specified directory. Then use `x509helper.py` or `x509helper2.exe` (if using the binary distribution)
 
-## x509helper
+## x509helper / x509helper2.exe
 
-This tool will post-process all of the files in the output directory from x509dump.py. It will pair keys with certificates so you can find out if you have just a standard public cert list or if you have some real keys.
+This tool will post-process all of the files in the output directory from `x509dump.py`. It will pair keys with certificates so you can find out if you have just a standard public cert list or if you have some real keys.
 
 ## Purpose of Release
 

@@ -3,9 +3,6 @@
 """
 The X509Helper class
 
-Support Python >=2.6
-
-
 Copyright (C) 2014
     Adam Greene <copyright@mzpqnxow.com>
 Please see LICENSE or LICENSE.md for terms

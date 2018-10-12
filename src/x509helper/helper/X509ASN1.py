@@ -1,11 +1,17 @@
+#!/usr/bin/env python2
+# -*- coding: utf-8 -*-
 """
-python OpenSSL bindings have problems parsing custom OIDs in the Subject
+Copyright (C) 2018
+    Adam Greene <copyright@mzpqnxow.com>
+Please see LICENSE or LICENSE.md for terms
+
+Python OpenSSL bindings have problems parsing custom OIDs in the Subject
 field. Without doing the ASN.1 parsing ourselves all we get in the Subject field of some
 certificates is 'Undef'
 
 This is the work around that parses the ASN.1 and gives a list of OIDs that can later be
 resolved to readable text. This is so that it can be extended in the future with exotic
-certificates
+certificates.
 """
 import pyasn1
 

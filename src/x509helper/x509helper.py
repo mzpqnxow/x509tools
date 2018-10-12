@@ -1,23 +1,28 @@
 #!/usr/bin/env python2
+# -*- coding: utf-8 -*-
 """
-main interface for parsing, reporting on and sorting X509 certificates and keys
+Copyright (C) 2018
+    Adam Greene <copyright@mzpqnxow.com>
+Please see LICENSE or LICENSE.md for terms
+
+Main interface for parsing, reporting on and sorting X509 certificates and keys
 see X509HelperApplication.py for details...
 
 
-TODO- deal with name conflict due to windows case insensitivity
-deal with uniqifying stuff before file writes
+TODO:
+ * Deal with name conflict due to windows case insensitivity
+ * Deal with uniqifying stuff before file writes
 
 TODO
-1 does it make sense to load the blacklist file in every instantiation of key/cert? it might be slow...
-2 log parsed certs in blacklist format so future runs can ignore known certs
-3 parse as der first in the Key and Certificate classes for efficiency (lots of DER false positives need to be parsed)
+ * Does it make sense to load the blacklist file in every instantiation of key/cert? it might be slow...
+ * Log parsed certs in blacklist format so future runs can ignore known certs
+ * Parse as der first in the Key and Certificate classes for efficiency (lots of DER false positives need to be parsed)
 
 """
 import argparse
 import logging
 
 from helper.X509HelperApplication import X509HelperApplication
-
 
 
 def parse_args():

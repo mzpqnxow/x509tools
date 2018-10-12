@@ -1,4 +1,4 @@
-# x509tools Binary Distribution, Prepared by (py2exe)[http://www.py2exe.org/]
+# x509tools Binary Distribution, Prepared by [py2exe](http://www.py2exe.org)
 
 The x509tools source code is available, but because they run on Windows and have some dependencies that require building specific versions of OpenSSL (and building and linking Python Cryptography modules against them) a binary package is included here. It is very old (2013-2014) but should work on modern Windows. Make sure you run it as Administrator as it will need `SeDebugPrivilege`
 

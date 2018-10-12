@@ -1,3 +1,4 @@
+[![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
 # x509tools
 
 A (very) old and unmaintained Python project used to dump x509/DER keys and certificates from live Windows processes. This was written around 2011. Maybe it will be useful to someone, it is unmaintained and has not been tested wince Windows 7

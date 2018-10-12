@@ -1,10 +1,6 @@
-([![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)]
-(https://opensource.org/licenses/BSD-3-Clause)[![Maintenance](https://img.shields.io/badge/Maintained%3F-no-red.svg)]
-(https://bitbucket.org/lbesson/ansi-colors)[![No Maintenance Intended]
-(http://unmaintained.tech/badge.svg)](http://unmaintained.tech/)[![Ask Me Anything !]
-(https://img.shields.io/badge/Ask%20me-anything-1abc9c.svg)]
-(https://GitHub.com/Naereen/ama)[![made-with-python]
-(https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/)
+[![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-no-red.svg)](https://bitbucket.org/lbesson/ansi-colors)
+
 
 # x509tools
 

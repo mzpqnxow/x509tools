@@ -1,4 +1,5 @@
-# x509dump
+# x509tools
+
 A (very) old and unmaintained Python project used to dump x509/DER keys and certificates from live Windows processes. This was written around 2011. Maybe it will be useful to someone, it is unmaintained and has not been tested wince Windows 7
 
 ## x509dump.py
@@ -9,15 +10,22 @@ This tool will dump all certificates and keys from a live/running Win32 process.
 
 This tool will post-process all of the files in the output directory from x509dump.py. It will pair keys with certificates so you can find out if you have just a standard public cert list or if you have some real keys.
 
-## Purpose of release
+## Purpose of Release
 
 As stated, this code is old and unmaintained and at this point untested. It is nothing revolutionary, especially in 2018, and is probably only useful as a reference to anyone wanting to do in memory poking/search of Win32 processes from Python
 
+## Caveats / Warnings
+
+* This has not been tested since Windows 7
+* You must be Local Administrator to acquire SeDebugPrivilege privileges on modern versions of Windows
+* Though in practice it has not caused any crashes (it is a passive tool and does not write memory) it theoretically could cause a process to crash, so don't use it on anything critical and say I didn't warn you
+* It probably won't work on newer versions of Windows with protections against memory inspection for certain processes, though I'm not sure about this
+
 # Credits
 
-The excellent win32 library is used to simplify the calls to native Win32 APIs. The rest is written by copyright@mzpqnxow.com
+All of the cryptography logic is mine, the bindings/wrappers for the Win32 API calls are provided by the (in-tree) win32 library.
 
-# License
+# License (covering all except code under win32/)
 
 This work is released under the 3-caluse BSD license (C) copyright@mzpqnxow.com
 

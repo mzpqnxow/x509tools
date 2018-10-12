@@ -1,5 +1,7 @@
 # x509tools Binary Distribution, Prepared by [py2exe](http://www.py2exe.org)
 
+These are PE/COFF executables, meant to run on Windows. Do not be an idiot and run them on Linux :)
+
 The x509tools source code is available, but because they run on Windows and have some dependencies that require building specific versions of OpenSSL (and building and linking Python Cryptography modules against them) a binary package is included here. It is very old (2013-2014) but should work on modern Windows. Make sure you run it as Administrator as it will need `SeDebugPrivilege`
 
 ## x509tools - tools for dumping and analyzing PEM and DER certificates/keys in memory (win32)

@@ -2,16 +2,22 @@ import base64
 import os
 import textwrap
 
-from Crypto.Util import asn1
 import X509Helper
 import X509HelperCertificate
 
+from Crypto.Util import asn1
 import OpenSSL
 
 
 class X509HelperKey(X509Helper.X509Helper):
-    def __init__(self, key_file, blacklist_file=None, logger=None, password='password'):
-        X509Helper.X509Helper.__init__(self, logger=logger, blacklist_file=blacklist_file)
+    def __init__(
+            self,
+            key_file,
+            blacklist_file=None,
+            logger=None,
+            password='password'):
+        X509Helper.X509Helper.__init__(
+            self, logger=logger, blacklist_file=blacklist_file)
         self.key_pem_buffer = None
         self.rsa_key = None
         self.key_private_asn1 = None
@@ -37,9 +43,8 @@ class X509HelperKey(X509Helper.X509Helper):
 
     def __eq__(self, obj):
         if isinstance(obj, X509HelperCertificate.X509HelperCertificate):
-            return (
-                (self.key_modulus == obj.certificate_public_modulus) and (
-                    obj.certificate_public_exponent == self.key_public_exponent))
+            return ((self.key_modulus == obj.certificate_public_modulus) and (
+                obj.certificate_public_exponent == self.key_public_exponent))
         else:
             return False
 
@@ -69,7 +74,8 @@ class X509HelperKey(X509Helper.X509Helper):
             # dos2unix and add a trailing newline
             filefd.write(self.key_pem_buffer.replace('\r\n', '\n') + '\n')
 
-        self.subjects = self.suggested_filename.ljust(25) + ' - %d bit RSA Private Key (PEM format)'.format(self.key_bitsize)
+        self.subjects = self.suggested_filename.ljust(
+            25) + ' - %d bit RSA Private Key (PEM format)'.format(self.key_bitsize)
         return self.subjects
 
     def key(self):
@@ -82,27 +88,37 @@ class X509HelperKey(X509Helper.X509Helper):
             self.crypto = OpenSSL.crypto
 
             try:
-                self.logger.warning('Trying to load {} data as PEM...'.format(self.key_file))
-                self.rsa_key = self.crypto.load_privatekey(self.crypto.FILETYPE_PEM, self.key_buffer, 'password')
+                self.logger.warning(
+                    'Trying to load {} data as PEM...'.format(
+                        self.key_file))
+                self.rsa_key = self.crypto.load_privatekey(
+                    self.crypto.FILETYPE_PEM, self.key_buffer, 'password')
                 self.key_pem_buffer = self.key_buffer
             except Exception as err:
                 pass
 
             if not self.rsa_key or not self.key_pem_buffer:
                 try:
-                    self.logger.warning('Trying to load {} data as DER...'.format(self.key_file))
-                    self.rsa_key = self.crypto.load_privatekey(self.crypto.FILETYPE_ASN1, self.key_buffer, 'password')
-                    self.key_pem_buffer = self.der_key_to_pem_key(self.key_buffer)
+                    self.logger.warning(
+                        'Trying to load {} data as DER...'.format(
+                            self.key_file))
+                    self.rsa_key = self.crypto.load_privatekey(
+                        self.crypto.FILETYPE_ASN1, self.key_buffer, 'password')
+                    self.key_pem_buffer = self.der_key_to_pem_key(
+                        self.key_buffer)
                 except Exception as err:
-                    self.logger.warning('Failure to parse {} as DER/PEM format key, skipping...'.format(self.key_file))
+                    self.logger.warning(
+                        'Failure to parse {} as DER/PEM format key, skipping...'.format(self.key_file))
                     raise(err)
 
             self.key_bitsize = self.rsa_key.bits()
-            self.key_private_asn1 = self.crypto.dump_privatekey(self.crypto.FILETYPE_ASN1, self.rsa_key)
+            self.key_private_asn1 = self.crypto.dump_privatekey(
+                self.crypto.FILETYPE_ASN1, self.rsa_key)
             self.key_private_der = asn1.DerSequence()
             self.key_private_der.decode(self.key_private_asn1)
             self.key_modulus = self.key_private_der[1]
-            self.key_printable_private_modulus = self.printable_modulus(self.key_modulus)
+            self.key_printable_private_modulus = self.printable_modulus(
+                self.key_modulus)
 
             d = self.modulus_long_to_string(self.key_modulus)
 
@@ -119,7 +135,8 @@ class X509HelperKey(X509Helper.X509Helper):
             self.key_private_exponent2 = self.key_private_der[7]
             self.key_private_coefficient = self.key_private_der[8]
 
-            self.suggested_filename = self.key_printable_private_modulus.replace('\t', '')
+            self.suggested_filename = self.key_printable_private_modulus.replace(
+                '\t', '')
             self.suggested_filename = self.suggested_filename[len(
                 self.suggested_filename) - (3 * self.FILENAME_OCTETS) + 1:]
             self.suggested_filename += '.key'
@@ -137,11 +154,14 @@ class X509HelperKey(X509Helper.X509Helper):
             self.parsed_key['private_coefficient'] = self.key_private_coefficient
             self.parsed_key['key_bitsize'] = self.key_bitsize
             self.parsed_key['suggested_filenmame'] = self.suggested_filename
-            self.logger.critical('Success - %d bit RSA Private Key (PEM format)'.format(self.key_bitsize))
+            self.logger.critical(
+                'Success - %d bit RSA Private Key (PEM format)'.format(self.key_bitsize))
             return
 
         except Exception as err:
             self.parsed_key = None
             self.logger.debug(err)
-            self.logger.debug('Exception with {} as an RSA key file, skipping...'.format(self.key_file))
+            self.logger.debug(
+                'Exception with {} as an RSA key file, skipping...'.format(
+                    self.key_file))
             return

@@ -1,13 +1,14 @@
 import base64
-from helper import (
-    X509Helper,
-    X509HelperKey,
-    Name)
 import os
 import textwrap
 
-import OpenSSL
+from helper import (
+    Name,
+    X509Helper,
+    X509HelperKey)
+
 from Crypto.Util import asn1
+import OpenSSL
 
 
 class X509HelperCertificate(X509Helper):
@@ -27,7 +28,8 @@ class X509HelperCertificate(X509Helper):
 
     def __eq__(self, obj):
         if isinstance(obj, X509HelperKey):
-            return obj.key_modulus == self.certificate_public_modulus and obj.key_public_exponent == self.certificate_public_exponent
+            return (obj.key_modulus == self.certificate_public_modulus) and (
+                obj.key_public_exponent == self.certificate_public_exponent)
         else:
             return False
 
@@ -50,36 +52,72 @@ class X509HelperCertificate(X509Helper):
         We know a few for unknown OIDs, translate the OID to a string and use that
         a la OpenSSL
 
-        NOTE: These are examples from a "private" organization that are publicly
-        documented. They are not proprietary and have no real value other than
-        serving as an example of how to deal with custom OID values
+        Fill these in yourself if you want, the documentation is listed in the comments
         """
         lookup = {
-            (2, 5, 4, 10): 'O',  # Organization - http://www.oid-info.com/get/2.5.4.10
-            (0, 9, 2342, 19200300, 100, 1, 1): 'uid',  # user id - http://www.oid-info.com/get/0.9.2342.19200300.100.1.1
-            (1, 3, 6, 1, 4, 1, 1814, 3, 1, 1): 'uuid',
-            (1, 3, 6, 1, 4, 1, 1814, 3, 1, 2): 'serial',
-            (1, 3, 6, 1, 4, 1, 1814, 3, 1, 3): 'password',
-            (1, 3, 6, 1, 4, 1, 1814, 3, 1, 4): 'user_firm',
-            (1, 3, 6, 1, 4, 1, 1814, 3, 1, 5): 'real terminal cust',
-            (1, 3, 6, 1, 4, 1, 1814, 3, 1, 6): 'login_session_subscription_id',
-            (1, 3, 6, 1, 4, 1, 1814, 3, 1, 7): 'login_session_subscription_id_instance',
-            (1, 3, 6, 1, 4, 1, 1814, 3, 1, 8): 'login_session_flags_string',
-            (1, 3, 6, 1, 4, 1, 1814, 3, 1, 9): 'login_session_logical_terminal_subscription_id',
-            (1, 3, 6, 1, 4, 1, 1814, 3, 1, 10): 'login_session_logical_terminal_subscription_id_instance',
-            (1, 3, 6, 1, 4, 1, 1814, 3, 1, 11): 'login_session_secure_proxy_luw_string',
-            (1, 3, 6, 1, 4, 1, 1814, 3, 1, 12): 'login_session_secure_proxy_luw_string',
-            (1, 3, 6, 1, 4, 1, 1814, 3, 1, 13): 'login_session_real_terminal_firm_number',
-            (1, 3, 6, 1, 4, 1, 1814, 3, 1, 14): 'login_session_user_customer_number',
-            (1, 3, 6, 1, 4, 1, 1814, 3, 1, 15): 'terminal_master_tuid',
-            (1, 3, 6, 1, 4, 1, 1814, 3, 1, 16): 'dual_primary_tuid',
-            (1, 3, 6, 1, 4, 1, 1814, 3, 1, 17): 'dual_primary_serial'}
+            # Organization - http://www.oid-info.com/get/2.5.4.10
+            # http://www.oid-info.com/get/0.9.2342.19200300.100.1.1
+            (2, ): 'ISO/ITU-T',
+            (2, 5): 'X.500 Directory Services',
+            (2, 5, 4): 'X.500 Attribute Types',
+            (2, 5, 4, 0): 'id-at-objectClass',
+            (2, 5, 4, 1): 'id-at-aliasedEntryName',
+            (2, 5, 4, 2): 'id-at-knowldgeinformation',
+            (2, 5, 4, 3): 'id-at-commonName',
+            (2, 5, 4, 4): 'id-at-surname',
+            (2, 5, 4, 5): 'id-at-serialNumber',
+            (2, 5, 4, 6): 'id-at-countryName',
+            (2, 5, 4, 7): 'id-at-localityName',
+            (2, 5, 4, 8): 'id-at-stateOrProvinceName',
+            (2, 5, 4, 9): 'id-at-streetAddress',
+            (2, 5, 4, 10): 'id-at-organizationName',
+            (2, 5, 4, 11): 'id-at-organizationalUnitName',
+            (2, 5, 4, 12): 'id-at-title',
+            (2, 5, 4, 13): 'id-at-description',
+            (2, 5, 4, 14): 'id-at-searchGuide',
+            (2, 5, 4, 15): 'id-at-businessCategory',
+            (2, 5, 4, 16): 'id-at-postalAddress',
+            (2, 5, 4, 17): 'id-at-postalCode',
+            (2, 5, 4, 18): 'id-at-postOfficeBox',
+            (2, 5, 4, 19): 'id-at-physicalDeliveryOfficeName',
+            (2, 5, 4, 20): 'id-at-telephoneNumber',
+            (2, 5, 4, 21): 'id-at-telexNumber',
+            (2, 5, 4, 22): 'id-at-teletexTerminalIdentifier',
+            (2, 5, 4, 23): 'id-at-facsimileTelephoneNumber',
+            (2, 5, 4, 24): 'id-at-x121Address',
+            (2, 5, 4, 25): 'id-at-internationalISDNNumber',
+            (2, 5, 4, 26): 'id-at-registeredAddress',
+            (2, 5, 4, 27): 'id-at-destinationIndicator',
+            (2, 5, 4, 28): 'id-at-preferredDeliveryMethod',
+            (2, 5, 4, 29): 'id-at-presentationAddress',
+            (2, 5, 4, 30): 'id-at-supportedApplicationContext',
+            (2, 5, 4, 31): 'id-at-member',
+            (2, 5, 4, 32): 'id-at-owner',
+            (2, 5, 4, 33): 'id-at-roleOccupant',
+            (2, 5, 4, 34): 'id-at-seeAlso',
+            (2, 5, 4, 35): 'id-at-userPassword',
+            (2, 5, 4, 36): 'id-at-userCertificate',
+            (2, 5, 4, 37): 'id-at-cACertificate',
+            (2, 5, 4, 38): 'id-at-authorityRevocationList',
+            (2, 5, 4, 39): 'id-at-certificateRevocationList',
+            (2, 5, 4, 40): 'id-at-crossCertificatePair',
+            (2, 5, 4, 41): 'id-at-name',
+            (2, 5, 4, 42): 'id-at-givenName',
+            (2, 5, 4, 43): 'id-at-initials',
+            (2, 5, 4, 44): 'id-at-generationQualifier',
+            (2, 5, 4, 45): 'id-at-uniqueIdentifier',
+            (2, 5, 4, 46): 'id-at-dnQualifier',
+            (2, 5, 4, 47): 'id-at-enhancedSearchGuide',
+            (2, 5, 4, 48): 'id-at-protocolInformation',
+            (2, 5, 4, 49): 'id-at-distinguishedName',
+            (2, 5, 4, 50): 'id-at-uniqueMember',
+            (2, 5, 4, 51): 'id-at-houseIdentifier',
+            (2, 5, 4, 52): 'id-at-supportedAlgorithms',
+            (2, 5, 4, 53): 'id-at-deltaRevocationList',
+            (2, 5, 4, 58): 'Attribute Certificate attribute (id-at-attributeCertificate)',
+            (2, 5, 4, 65): 'id-at-pseudonym'}
 
-        if oid_tuple in lookup:
-            name = lookup[oid_tuple]  # some fields are known
-        else:
-            name = self.OID_tuple_to_string(oid_tuple)  # just return the raw OID as a string
-        return name
+        return lookup.get(oid_tuple, self.OID_tuple_to_string(oid_tuple))
 
     def handle_custom_oids(self):
         """
@@ -92,7 +130,7 @@ class X509HelperCertificate(X509Helper):
         """
         certType = Name()
         derData = self.subject.der()
-        cert, rest = pyasn1.codec.der.decoder(derData, asn1spec=certType)
+        cert, rest = asn1.codec.der.decoder(derData, asn1spec=certType)
 
         try:
             subject = ''
@@ -128,9 +166,12 @@ class X509HelperCertificate(X509Helper):
 
         with open(os.path.join(dirname, self.suggested_filename), 'wb') as filefd:
             # dos2unix and add a trailing newline
-            filefd.write(self.certificate_pem_buffer.replace('\r\n', '\n') + '\n')
+            filefd.write(
+                self.certificate_pem_buffer.replace(
+                    '\r\n', '\n') + '\n')
 
-        self.summary = self.suggested_filename.ljust(25) + ' - ' + self.text_subject
+        self.summary = self.suggested_filename.ljust(
+            25) + ' - ' + self.text_subject
         return self.summary
 
     def parse_subject_components(self):
@@ -143,12 +184,14 @@ class X509HelperCertificate(X509Helper):
             try:
                 self.text_subject += self.handle_custom_oids()
             except Exception:
-                self.logger.error('unexpected exception in handle_custom_oids!')
+                self.logger.error(
+                    'unexpected exception in handle_custom_oids!')
                 self.text_subject += 'UNDEF=0'
 
         else:
             for key in self.subject_components:
-                self.text_subject += key + '=' + self.subject_components[key] + '/'
+                self.text_subject += key + '=' + \
+                    self.subject_components[key] + '/'
         return
 
     def get_subject_field(self, field):
@@ -214,7 +257,8 @@ class X509HelperCertificate(X509Helper):
                 self.certificate_pubkey_der[1])
             self.certificate_public_exponent = self.certificate_pubkey_der[2]
 
-            self.suggested_filename = self.certificate_printable_public_modulus.replace('\t', '')
+            self.suggested_filename = self.certificate_printable_public_modulus.replace(
+                '\t', '')
             self.suggested_filename = self.suggested_filename[len(
                 self.suggested_filename) - (3 * self.FILENAME_OCTETS) + 1:]
             self.suggested_filename += '.cert'

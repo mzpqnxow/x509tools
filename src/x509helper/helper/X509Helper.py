@@ -1,22 +1,40 @@
-from helper import Logging
+#!/usr/bin/env python2
+# -*- coding: utf-8 -*-
+"""
+The X509Helper class
+
+Support Python >=2.6
+
+
+Copyright (C) 2014
+    Adam Greene <copyright@mzpqnxow.com>
+Please see LICENSE or LICENSE.md for terms
+"""
 import logging
 import sys
 
+from helper import LoggingMixin
 
-class X509Helper(Logging):
+
+class X509Helper(LoggingMixin):
     """
     base class for X509HelperCertificate and X509HelperKey
     functions for formatting common fieldsas errtc.
     """
-    # when producing suggested_filename, how many bytes of the modules to use in naming
+    # when producing suggested_filename, how many bytes of the modules to use
+    # in naming
     FILENAME_OCTETS = 6
 
-    def __init__(self, logger=None, log_level=logging.CRITICAL, blacklist_file=''):
+    def __init__(
+            self,
+            logger=None,
+            log_level=logging.CRITICAL,
+            blacklist_file=''):
         self.modulus_blacklist = []
         self.modulus_blacklist_config_path = blacklist_file
 
         if logger is None:
-            Logging.__init__(self, log_level=log_level)
+            LoggingMixin.__init__(self, log_level=log_level)
         else:
             self.logger = logger
         self.load_modulus_blacklist()
@@ -32,16 +50,23 @@ class X509Helper(Logging):
                 eline = eline.upper()
                 self.modulus_blacklist.append(eline)
             f.close()
-            self.logger.debug('Added {} items to modulus blacklist...'.format(len(self.modulus_blacklist)))
+            self.logger.debug('Added {} items to modulus blacklist...'.format(
+                len(self.modulus_blacklist)))
         except Exception as err:
-            self.logger.error('Fatal exception occurred while building blacklist...')
+            self.logger.error(
+                'Fatal exception occurred while building blacklist...')
             self.logger.error(err)
             sys.exit(10)
 
     def is_blacklisted(self, modulus):
         return modulus.upper() in self.modulus_blacklist
 
-    def printable_modulus(self, der_decimal, columns=16, prefix='\t', use_colons=True):
+    def printable_modulus(
+            self,
+            der_decimal,
+            columns=16,
+            prefix='\t',
+            use_colons=True):
         modulus = hex(der_decimal).rstrip('L').lstrip('0x')or '0'
         printable_modulus = ''
         for i in xrange(0, len(modulus), 2):

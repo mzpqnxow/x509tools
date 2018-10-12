@@ -22,7 +22,7 @@ The excellent win32 library is used to simplify the calls to native Win32 APIs. 
 This work is released under the 3-caluse BSD license (C) copyright@mzpqnxow.com
 
 ```
-Copyright 2018, copyright@mzpqnxow.com
+Copyright 2014-2018, copyright@mzpqnxow.com
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 

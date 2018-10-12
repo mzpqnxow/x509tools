@@ -13,14 +13,17 @@ TODO
 3 parse as der first in the Key and Certificate classes for efficiency (lots of DER false positives need to be parsed)
 
 """
+from helper.X509HelperApplication import X509HelperApplicationimport(
+    ,)
+
 import argparse
 import logging
-from helper.X509HelperApplication import X509HelperApplication
 
 
 def parse_args():
     args = {}
-    parser = argparse.ArgumentParser(description='sslhelper: make sense out of a directory full of valid and invalid DER and PEM files')
+    parser = argparse.ArgumentParser(
+        description='sslhelper: make sense out of a directory full of valid and invalid DER and PEM files')
 
     parser.add_argument(
         '-o', '--output-directory',
@@ -37,7 +40,8 @@ def parse_args():
         type=str,
         help='Directory containing files to examine for valid PEM/DER formatted keys/certificates')
     parser.add_argument(
-        '-b', '--blacklist-file',
+        '-b',
+        '--blacklist-file',
         dest='blacklist_file',
         metavar="blacklist file",
         default="",
@@ -50,7 +54,8 @@ def parse_args():
         action="count",
         help="Verbosity level for output. Use up to 5 times for full debugging information")
     parser.add_argument(
-        '-F', '--out-format',
+        '-F',
+        '--out-format',
         metavar="output format",
         dest='output_format',
         type=str,

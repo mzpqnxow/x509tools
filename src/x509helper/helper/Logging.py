@@ -2,11 +2,12 @@ import logging
 import sys
 
 
-class Logging(object):
+class LoggingMixin(object):
     """
     barebones base class for logging functionality. This is really poor design
     and implementation. It's very old :<
     """
+
     def __init__(self, log_level):
         self.log_level = log_level
         self.init_logging()
@@ -18,8 +19,11 @@ class Logging(object):
             # formatter = logging.Formatter(
             #   "[%(levelname)s] %(asctime)s@%(name)s[%(lineno)s]::%(funcName)s() - %(message)s",
             #       datefmt='%Y-%m-%d')
-            formatter = logging.Formatter("\r%(funcName)s() - %(message)s", datefmt='%Y-%m-%d')
+            formatter = logging.Formatter(
+                "\r%(funcName)s() - %(message)s", datefmt='%Y-%m-%d')
             self.stdout_log_handler.setFormatter(formatter)
-            logging.getLogger(self.__class__.__name__).addHandler(self.stdout_log_handler)
+            logging.getLogger(
+                self.__class__.__name__).addHandler(
+                self.stdout_log_handler)
             self.logger = logging.getLogger(self.__class__.__name__)
             self.logger.setLevel(self.log_level)

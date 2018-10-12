@@ -1,16 +1,15 @@
-import sys
-import os
-import glob
-import struct
-import sys
-import stat
-import traceback
-import base64
-import textwrap
-import logging
-import argparse
-import string
-import errno
+from X509ASN1 import (
+    Name,
+    DirectoryString,
+    AttributeType,
+    AttributeTypeAndValue,
+    AttributeValue,
+    MAX,
+    RDNSequence,
+    RelativeDistinguishedName)
+from X509Helper import X509Helper
+from X509HelperCertificate import X509HelperCertificate
+from X509HelperKey import X509HelperKey
 
 from Crypto.Util import asn1
 
@@ -26,27 +25,3 @@ import pyasn1
 from pyasn1.codec.der.decoder import decode as DerDecode
 from pyasn1.type import tag, namedtype, namedval, univ, constraint, char, useful
 from pyasn1 import error
-
-from X509ASN1 import (
-	Name,
-	DirectoryString,
-	AttributeType,
-	AttributeTypeAndValue,
-	AttributeValue,
-	MAX,
-	RDNSequence,
-	RelativeDistinguishedName)
-from X509Helper import X509Helper
-from X509HelperCertificate import X509HelperCertificate
-from X509HelperKey import X509HelperKey
-
-
-
-
-
-
-
-
-
-
-__all__ = []

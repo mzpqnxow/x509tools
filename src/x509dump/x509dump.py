@@ -3,15 +3,15 @@
 win32 module Copyright (c) 2009-2014, Mario Vila
 x509dump.py Copyright (c) 2013, copyright@mzpqnxow.com
 """
-import platform
-import sys
-import re
 import argparse
-import struct
+import errno
 import logging
 import os
+import platform
+import re
 import stat
-import errno
+import struct
+import sys
 import win32
 
 
@@ -34,7 +34,9 @@ class Win32MemoryScraper(object):
             self.stdout_log_handler = logging.StreamHandler(sys.stderr)
             formatter = logging.Formatter("\r%(funcName)s() - %(message)s")
             self.stdout_log_handler.setFormatter(formatter)
-            logging.getLogger(self.__class__.__name__).addHandler(self.stdout_log_handler)
+            logging.getLogger(
+                self.__class__.__name__).addHandler(
+                self.stdout_log_handler)
             self.logger = logging.getLogger(self.__class__.__name__)
             self.log_level = logging.ERROR
             self.logger.setLevel(self.log_level)
@@ -43,7 +45,8 @@ class Win32MemoryScraper(object):
             self.logger.critical(
                 'Error - Win32MemoryScraper class only tested/supported on Windows 7!')
             self.logger.critical(
-                'Error - your platform is %s (%s)' % (platform.system(), platform.release()))
+                'Error - your platform is %s (%s)' %
+                (platform.system(), platform.release()))
             self.fatal('exiting...')
         self.spinner_status = 0
         self.spinner_speed_status = 0
@@ -68,7 +71,8 @@ class Win32MemoryScraper(object):
         match += br"(?P<der_type>\x02\x01\x00|\x30\x82))"
         patt = re.compile(match, re.DOTALL)
         for f_iter in patt.finditer(mbuf):
-            out_filename = hex(base + f_iter.start(0)).strip("L").lstrip("0x") + "-der"
+            out_filename = hex(
+                base + f_iter.start(0)).strip("L").lstrip("0x") + "-der"
             if f_iter.group('der_type') == self.DER_KEY_FINGERPRINT:
                 self.logger.critical("dumping DER key".ljust(32))
                 out_filename += ".key"
@@ -88,7 +92,8 @@ class Win32MemoryScraper(object):
                 filefd = None
                 filefd = open(output_directory + out_filename, "wb")
             except Exception as err:
-                self.logger.critical('Exception - open({})'.format(output_directory + out_filename))
+                self.logger.critical(
+                    'Exception - open({})'.format(output_directory + out_filename))
                 self.logger.critical(err)
                 self.fatal('exiting...')
             finally:
@@ -107,8 +112,10 @@ class Win32MemoryScraper(object):
 
         patt = re.compile(match)
         for filefd in patt.finditer(mbuf):
-            out_filename = hex(base + filefd.start(0)).strip("L").lstrip('0x') + '-pem'
-            pem_data_type, pem_data = filefd.group('pem_data_type'), filefd.group('pem_data')
+            out_filename = hex(
+                base + filefd.start(0)).strip("L").lstrip('0x') + '-pem'
+            pem_data_type, pem_data = filefd.group(
+                'pem_data_type'), filefd.group('pem_data')
 
             if pem_data_type == 'PRIVATE KEY':
                 self.logger.critical('dumping PEM key'.ljust(32))
@@ -167,14 +174,14 @@ class Win32MemoryScraper(object):
     def create_directory_or_die(self, directory):
         try:
             os.mkdir(directory)
-            self.logger.critical('Success - created output directory "{}" '.format(
-                directory))
+            self.logger.critical(
+                'Success - created output directory "{}" '.format(directory))
             return
         except OSError as err:
             self.logger.critical('Exception - mkdir')
             self.logger.critical(err)
             self.fatal('exiting...')
-    
+
     def validate_directory_or_die(self, directory):
         self.logger.debug('validating output directory')
         try:
@@ -186,16 +193,18 @@ class Win32MemoryScraper(object):
                     self.fatal('exiting...')
             else:
                 self.logger.critical(
-                    'Error - user specified "%s" for output directory but it is not a directory', directory)
+                    'Error - user specified "%s" for output directory but it is not a directory',
+                    directory)
                 self.fatal('exiting...')
         except OSError as err:
             if err.errno == errno.ENOENT:
-                self.logger.critical('Exception - output directory "{}" does not exist'.format(
-                    directory))
+                self.logger.critical(
+                    'Exception - output directory "{}" does not exist'.format(directory))
                 try:
                     print('')
                     print('')
-                    raw_input('Press enter to create the directory now, control-c to abort...')
+                    raw_input(
+                        'Press enter to create the directory now, control-c to abort...')
                     print('')
                 except KeyboardInterrupt:
                     print('')
@@ -220,7 +229,7 @@ class Win32MemoryScraper(object):
             metavar='Window Title',
             dest='window_title',
             type=str,
-            help='Window title of application to scrape for DER/PEM data')        
+            help='Window title of application to scrape for DER/PEM data')
         parser.add_argument(
             '-o', '--output-directory',
             required=True,
@@ -237,7 +246,8 @@ class Win32MemoryScraper(object):
 
         self.args = parser.parse_args()
 
-        # Really dumb stuff with logging, you can tell this code was written 5+ years ago :<
+        # Really dumb stuff with logging, you can tell this code was written 5+
+        # years ago :<
         if self.args.verbosity > 4:
             self.args.verbosity = 4
         self.args.verbosity *= 10
@@ -246,12 +256,13 @@ class Win32MemoryScraper(object):
         if not self.args.verbosity:
             self.args.verbosity = logging.CRITICAL
 
-        self.log_level = self.args.verbosity 
-        self.logger.setLevel(self.log_level)         
+        self.log_level = self.args.verbosity
+        self.logger.setLevel(self.log_level)
 
         if self.args.pid and self.args.window_title:
             parser.print_usage()
-            parser.exit('Error - cannot window title (-w) and pid (-p) options are mutually exclusive')
+            parser.exit(
+                'Error - cannot window title (-w) and pid (-p) options are mutually exclusive')
             parser.exit(9)
 
         if not self.args.output_directory.endswith('/'):
@@ -268,7 +279,8 @@ class Win32MemoryScraper(object):
             priv_value = win32.LookupPrivilegeValue(None, priv)
             new_privs = [(priv_value, win32.SE_PRIVILEGE_ENABLED)]
             win32.AdjustTokenPrivileges(htoken, new_privs)
-            self.logger.debug('Success - AdjustTokenPrivileges(%s)'.format(priv))
+            self.logger.debug(
+                'Success - AdjustTokenPrivileges(%s)'.format(priv))
         except win32.WindowsError as err:
             self.logger.warning('Exception - AdjustTokenPrivileges')
             self.logger.warning(err)
@@ -278,12 +290,14 @@ class Win32MemoryScraper(object):
 
     def get_process_name_by_pid(self, pid):
         try:
-            process_hnd = win32.OpenProcess(win32.PROCESS_QUERY_LIMITED_INFORMATION, False, pid)
+            process_hnd = win32.OpenProcess(
+                win32.PROCESS_QUERY_LIMITED_INFORMATION, False, pid)
         except Exception as err:
             self.logger.critical('Exception - OpenProcess({})'.format(pid))
             self.logger.critical(err)
             self.fatal('exiting...')
-        self.logger.debug('return QueryFullProcessImageNameA on handle for process %d'.format(pid))
+        self.logger.debug(
+            'return QueryFullProcessImageNameA on handle for process %d'.format(pid))
         return win32.QueryFullProcessImageNameA(process_hnd, 0)
 
     def get_processes(self):
@@ -294,16 +308,20 @@ class Win32MemoryScraper(object):
             if not pid:
                 continue
             try:
-                process_hnd = win32.OpenProcess(win32.PROCESS_QUERY_INFORMATION, False, pid)
-                self.logger.debug("Success - OpenProcess")                
-                process_list[pid] = win32.QueryFullProcessImageNameA(process_hnd, 0)
-                self.logger.debug("Success - QueryFullProcessImageNameA")                
+                process_hnd = win32.OpenProcess(
+                    win32.PROCESS_QUERY_INFORMATION, False, pid)
+                self.logger.debug("Success - OpenProcess")
+                process_list[pid] = win32.QueryFullProcessImageNameA(
+                    process_hnd, 0)
+                self.logger.debug("Success - QueryFullProcessImageNameA")
             except win32.WindowsError as err:
                 if err.winerror == win32.ERROR_ACCESS_DENIED:
-                    self.logger.debug("Exception - OpenProcess/QueryFullProcessImageNameA - ERROR_ACCESS_DENIED")
+                    self.logger.debug(
+                        "Exception - OpenProcess/QueryFullProcessImageNameA - ERROR_ACCESS_DENIED")
                     process_list[pid] = "ERROR_ACCESS_DENIED"
                 else:
-                    self.logger.critical("Exception - OpenProcess/QueryFullProcessImageNameA")
+                    self.logger.critical(
+                        "Exception - OpenProcess/QueryFullProcessImageNameA")
                     self.logger.critical(err)
             except Exception as err:
                 self.logger.critical('Exception - general error')
@@ -328,10 +346,12 @@ class Win32MemoryScraper(object):
             self.logger.debug('Success - FindWindow')
             pid = win32.GetWindowThreadProcessId(wnd_handle)
             self.logger.debug('Success - GetWindowThreadProcessId')
-            self.logger.critical('Success - using pid {} from window title "{}"'.format(pid[1], title))
+            self.logger.critical(
+                'Success - using pid {} from window title "{}"'.format(pid[1], title))
             return pid[1]
         except win32.WindowsError as err:
-            self.logger.critical("Exception - FindWindow/GetWindowThreadProcessId")
+            self.logger.critical(
+                "Exception - FindWindow/GetWindowThreadProcessId")
             self.logger.critical(err)
             self.fatal("exiting...")
         except Exception as err:
@@ -349,16 +369,16 @@ class Win32MemoryScraper(object):
             self.logger.critical(str(pid).ljust(8) + processes[pid])
 
         pid = -1
-        while not processes.has_key(pid):
+        while pid not in processes:
             if pid != -1:
                 self.logger.critical('Error - invalid PID entered')
             pid = raw_input('Enter PID> ')
             try:
                 pid = int(pid.strip())
-            except:
+            except BaseException:
                 pass
         return pid
-            
+
     def spinner(self):
         self.spinner_speed_status += 1
         if self.spinner_speed_status < self.SPINNER_SPEED_DELAY:
@@ -367,7 +387,7 @@ class Win32MemoryScraper(object):
             if self.spinner_visibile:
                 self.spinner_visible = False
             else:
-                self.spinner_visibile = True 
+                self.spinner_visibile = True
             self.spinner_speed_status = 0
 
         self.spinner_status += 1
@@ -387,14 +407,16 @@ class Win32MemoryScraper(object):
 
         if not self.args.pid:
             if self.args.window_title:
-                self.args.pid = self.get_pid_by_window_title(self.args.window_title)
+                self.args.pid = self.get_pid_by_window_title(
+                    self.args.window_title)
             else:
                 self.args.pid = self.choose_from_proces()
 
-
-        self.logger.critical('Opening target process - OpenProcess(%d)'.format(self.args.pid))
+        self.logger.critical(
+            'Opening target process - OpenProcess(%d)'.format(self.args.pid))
         try:
-            process_hnd = win32.OpenProcess(win32.PROCESS_ALL_ACCESS, 0, self.args.pid)
+            process_hnd = win32.OpenProcess(
+                win32.PROCESS_ALL_ACCESS, 0, self.args.pid)
         except Exception as err:
             self.logger.critical('Exception - OpenProcess')
             self.logger.critical(err)
@@ -404,8 +426,9 @@ class Win32MemoryScraper(object):
         dw_pagesize = sysinfo.dwPagesize
         self.logger.debug("Using page size 0x%x", dw_pagesize)
         self.curr_addr = self.addr_min
-        self.logger.critical('Beginning VirtualQueryEx/ReadProcessMemory loop (0x%x-0x%x)' % (
-            self.curr_addr, self.addr_max))
+        self.logger.critical(
+            'Beginning VirtualQueryEx/ReadProcessMemory loop (0x%x-0x%x)' %
+            (self.curr_addr, self.addr_max))
         print('')
         while self.curr_addr < self.addr_max:
             self.spinner()
@@ -424,20 +447,24 @@ class Win32MemoryScraper(object):
             base_address = page.BaseAddress
             region_size = page.RegionSize
             try:
-                mbuf = win32.ReadProcessMemory(process_hnd, base_address, region_size)
+                mbuf = win32.ReadProcessMemory(
+                    process_hnd, base_address, region_size)
             except Exception as err:
                 self.logger.critical("Exception - ReadProcessMemory")
                 self.curr_addr += dw_pagesize
                 self.logger.debug("advancing to next memory page...")
                 continue
 
-            self.regex_search_for_pem(mbuf, base_address, self.args.output_directory)
-            self.regex_search_for_der(mbuf, base_address, self.args.output_directory)
+            self.regex_search_for_pem(
+                mbuf, base_address, self.args.output_directory)
+            self.regex_search_for_der(
+                mbuf, base_address, self.args.output_directory)
             self.curr_addr += region_size
 
         win32.CloseHandle(process_hnd)
-        print('\r\r[+] Search over process address range 0x%.8x-0x%.8x complete' % (
-            self.addr_min, self.addr_max))
+        print(
+            '\r\r[+] Search over process address range 0x%.8x-0x%.8x complete' %
+            (self.addr_min, self.addr_max))
         print('')
         self.logger.critical('Search complete, exiting...')
 
@@ -446,9 +473,11 @@ def clean_screen_exit():
     print('\r' + ' '.rjust(64))
     print('')
 
+
 def main():
     winscraiper = Win32MemoryScraper()
     winscraiper.scrape()
+
 
 if __name__ == "__main__":
     try:

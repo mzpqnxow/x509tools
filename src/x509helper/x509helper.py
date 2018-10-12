@@ -13,11 +13,11 @@ TODO
 3 parse as der first in the Key and Certificate classes for efficiency (lots of DER false positives need to be parsed)
 
 """
-from helper.X509HelperApplication import X509HelperApplicationimport(
-    ,)
-
 import argparse
 import logging
+
+from helper.X509HelperApplication import X509HelperApplication
+
 
 
 def parse_args():

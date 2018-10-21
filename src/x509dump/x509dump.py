@@ -24,7 +24,10 @@ import re
 import stat
 import struct
 import sys
-import win32
+
+# This changed ...
+# import win32
+from winappdbg import win32
 
 
 class Win32MemoryScraper(object):
@@ -435,7 +438,7 @@ class Win32MemoryScraper(object):
             self.fatal('exiting...')
 
         sysinfo = win32.GetSystemInfo()
-        dw_pagesize = sysinfo.dwPagesize
+        dw_pagesize = sysinfo.dwPageSize  # 10 years later, someone fixed the name!
         self.logger.debug("Using page size 0x%x", dw_pagesize)
         self.curr_addr = self.addr_min
         self.logger.critical(

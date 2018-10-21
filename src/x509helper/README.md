@@ -1,6 +1,8 @@
 ## Notes
 
-This code is used after x509dump is used. It pairs up certificates and keys (if there were pairs)
+* This code is used after x509dump is used. It pairs up certificates and keys (if there were pairs)
+* Please run it on Linux or you will have a bad time getting binary dependencies (i.e. OpenSSL, etc..) to work and it's a pain to try to support anyone who might use this on Windows, thx.
+
 
 ## More notes
 

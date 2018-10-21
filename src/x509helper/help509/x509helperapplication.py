@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 """
-Copyright (C) 2018
+Copyright (C) 2011-2018
     Adam Greene <copyright@mzpqnxow.com>
 Please see LICENSE or LICENSE.md for terms
 """
@@ -10,9 +10,8 @@ import os
 import stat
 import sys
 
-from Logging import LoggingMixin
-from X509HelperCertificate import X509HelperCertificate
-from X509HelperKey import X509HelperKey
+from logger import LoggingMixin
+from x509helper import X509HelperKey, X509HelperCertificate
 
 
 class X509HelperApplication(LoggingMixin):

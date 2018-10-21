@@ -22,7 +22,7 @@ TODO
 import argparse
 import logging
 
-from helper.X509HelperApplication import X509HelperApplication
+from help509.x509helperapplication import X509HelperApplication
 
 
 def parse_args():

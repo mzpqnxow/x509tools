@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 """
-Copyright (C) 2018
+Copyright (C) 2011-2018
     Adam Greene <copyright@mzpqnxow.com>
 Please see LICENSE or LICENSE.md for terms
 
@@ -14,18 +14,19 @@ resolved to readable text. This is so that it can be extended in the future with
 certificates.
 """
 import pyasn1
-
+from pyasn1.type.univ import Choice, ObjectIdentifier, SetOf, Sequence, SequenceOf
+from pyasn1.type import char
 MAX = 64
 
 
-class DirectoryString(pyasn1.type.univ.Choice):
+class DirectoryString(Choice):
     componentType = pyasn1.type.namedtype.NamedTypes(
         pyasn1.type.namedtype.NamedType(
             'teletexString', pyasn1.type.char.TeletexString().subtype(
                 subtypeSpec=pyasn1.type.constraint.ValueSizeConstraint(1, MAX))),
         pyasn1.type.namedtype.NamedType(
             'printableString',
-            pyasn1.type.char.PrintableString().subtype(
+            char.PrintableString().subtype(
                 subtypeSpec=pyasn1.type.constraint.ValueSizeConstraint(1, MAX))),
         pyasn1.type.namedtype.NamedType(
             'universalString', pyasn1.type.char.UniversalString().subtype(
@@ -45,24 +46,24 @@ class AttributeValue(DirectoryString):
     pass
 
 
-class AttributeType(pyasn1.type.univ.ObjectIdentifier):
+class AttributeType(ObjectIdentifier):
     pass
 
 
-class AttributeTypeAndValue(pyasn1.type.univ.Sequence):
+class AttributeTypeAndValue(Sequence):
     componentType = pyasn1.type.namedtype.NamedTypes(
         pyasn1.type.namedtype.NamedType('type', AttributeType()),
         pyasn1.type.namedtype.NamedType('value', AttributeValue()))
 
 
-class RelativeDistinguishedName(pyasn1.type.univ.SetOf):
+class RelativeDistinguishedName(SetOf):
     componentType = AttributeTypeAndValue()
 
 
-class RDNSequence(pyasn1.type.univ.SequenceOf):
+class RDNSequence(SequenceOf):
     componentType = RelativeDistinguishedName()
 
 
-class Name(pyasn1.type.univ.Choice):
+class Name(Choice):
     componentType = pyasn1.type.namedtype.NamedTypes(
         pyasn1.type.namedtype.NamedType('', RDNSequence()))
